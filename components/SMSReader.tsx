@@ -37,13 +37,14 @@ const SMSReader: React.FC = () => {
       console.warn(err);
     }
   };
- 
+const isTransactional = (text:string) =>{
+  return text.toLowerCase().match("credited") ||  text.toLowerCase().match("debited")
+}
   const fetchSMSMessages = () => {
     const filter = {
       box: 'inbox',
-      read: 0,
+      read: 1,
       indexFrom: 0,
-      maxCount: 10,
     };
 
     SmsAndroid.list(
@@ -52,11 +53,14 @@ const SMSReader: React.FC = () => {
         console.error('Failed to fetch messages:', fail);
       },
 
+
       (count, smsList) => {
+        console.log(JSON.parse(smsList))
         const fetchedMessages: SMSMessage[] = JSON.parse(smsList);
+
         let regex = new RegExp("[a-zA-Z0-9]{2}-[a-zA-Z0-9]{6}", "i");
         const filteredMessages = fetchedMessages.filter((message) =>
-          regex.test(message.address)
+          regex.test(message.address) && isTransactional(message.body)
         );
         setMessages(filteredMessages);
       },
