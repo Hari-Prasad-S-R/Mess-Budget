@@ -37,7 +37,7 @@ const SMSReader: React.FC = () => {
       console.warn(err);
     }
   };
-
+ 
   const fetchSMSMessages = () => {
     const filter = {
       box: 'inbox',
@@ -51,9 +51,14 @@ const SMSReader: React.FC = () => {
       (fail) => {
         console.error('Failed to fetch messages:', fail);
       },
+
       (count, smsList) => {
         const fetchedMessages: SMSMessage[] = JSON.parse(smsList);
-        setMessages(fetchedMessages);
+        let regex = new RegExp("[a-zA-Z0-9]{2}-[a-zA-Z0-9]{6}", "i");
+        const filteredMessages = fetchedMessages.filter((message) =>
+          regex.test(message.address)
+        );
+        setMessages(filteredMessages);
       },
     );
   };
