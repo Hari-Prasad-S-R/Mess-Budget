@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, PermissionsAndroid, Alert } from 'react-native';
 import SmsAndroid from 'react-native-get-sms-android';
+import * as fs from 'fs';
 
 interface SMSMessage {
   address: string;
@@ -55,13 +56,14 @@ const isTransactional = (text:string) =>{
 
 
       (count, smsList) => {
-        console.log(JSON.parse(smsList))
+        
         const fetchedMessages: SMSMessage[] = JSON.parse(smsList);
 
-        let regex = new RegExp("[a-zA-Z0-9]{2}-[a-zA-Z0-9]{6}", "i");
+        let institutionalMailRegex = new RegExp("[a-zA-Z0-9]{2}-[a-zA-Z0-9]{6}", "i");
         const filteredMessages = fetchedMessages.filter((message) =>
-          regex.test(message.address) && isTransactional(message.body)
+          institutionalMailRegex.test(message.address) && isTransactional(message.body)
         );
+        console.log(JSON.stringify(filteredMessages))
         setMessages(filteredMessages);
       },
     );
