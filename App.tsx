@@ -42,6 +42,7 @@ function App(): React.JSX.Element {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <SMSReader/>
+          <>varssh</>
         </View>
       </ScrollView>
       
